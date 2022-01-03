@@ -8,6 +8,7 @@ module.exports = static;
 const mimeTypes = {
   '.html': 'text/html',
   '.jgp': 'image/jpeg',
+  '.jpg': 'image/jpeg',
   '.css': 'text/css',
   '.js': 'text/javascript',
   '.png': 'image/png',
@@ -34,15 +35,18 @@ static.getContentType = pathname => {
 };
 
 static.get = async (pathname, response) => {  
-  const contentType = static.getContentType(pathname);
+  const newPath = path.extname(pathname) ? pathname : '/';
+ 
+  const contentType = static.getContentType(newPath);
   response.setHeader('Content-Type', contentType);
+
   const baseDir = path.join(__dirname, '../');
   const testDir = 'max';
   // const testDir = 'test'; // experimental ui
- 
-  const fileDir = (pathname === '/') ?
-    path.join(apps[testDir], '/index.html') : path.join(apps[testDir], pathname);
- 
+
+  const fileDir = (newPath === '/') ?
+    path.join(apps[testDir], '/index.html') : path.join(apps[testDir], newPath);
+
   const filename = `${baseDir}${fileDir}`;
  
   let status = 200;
